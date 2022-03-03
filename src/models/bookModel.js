@@ -12,10 +12,14 @@ const bookSchema = new mongoose.Schema( {
         ref:"newPublisher"
     },
     price: Number,
-    ratings: Number
+    ratings: Number,
+    isHardCover :{
+        type:Boolean,
+        default:false
+    }
 
 
 }, { timestamps: true });
 
 
-module.exports = mongoose.model('newBook', bookSchema)
+module.exports = mongoose.model('newBook1', bookSchema)
