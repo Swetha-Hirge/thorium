@@ -2,9 +2,7 @@ const jwt = require("jsonwebtoken");
 const userModel = require("../models/userModel");
 
 const createUser = async function (abcd, xyz) {
-  //You can name the req, res objects anything.
-  //but the first parameter is always the request 
-  //the second parameter is always the response
+  
   let data = abcd.body;
   let savedData = await userModel.create(data);
   console.log(abcd.newAtribute);
@@ -81,10 +79,29 @@ const updateUser = async function (req, res) {
 
   let userData = req.body;
   let updatedUser = await userModel.findOneAndUpdate({ _id: userId }, userData);
-  res.send({ status: updatedUser, data: updatedUser });
+  res.send({ status: userData, data: updatedUser });
 };
 
-const postMessage = async function (req, res) {
+const deleteUser = async function (req, res) {
+  // Do the same steps here:
+  // Check if the token is present
+  // Check if the token present is a valid token
+  // Return a different error message in both these cases
+  
+    let userId = req.params.userId;
+    console.log(userId)
+    let user = await userModel.findById(userId);
+    //Return an error if no user with the given id exists in the db
+    if (!user) {
+      return res.send("No such user exists");
+    }
+  
+    // let userData = req.body;
+    let deletedUser = await userModel.findOneAndUpdate({ _id: userId },{$set:{isDeleted:true}});
+    res.send({ status: userId, data: deletedUser });
+  };
+
+  const postMessage = async function (req, res) {
     let message = req.body.message
     // Check if the token is present
     // Check if the token present is a valid token
@@ -108,15 +125,18 @@ const postMessage = async function (req, res) {
     
     let updatedPosts = user.posts
     //add the message to user's posts
-    updatedPosts.push(message)
+    let msg = req.body.msg
+    updatedPosts.push(msg)
     let updatedUser = await userModel.findOneAndUpdate({_id: user._id},{posts: updatedPosts}, {new: true})
 
     //return the updated user document
     return res.send({status: true, data: updatedUser})
 }
 
+
 module.exports.createUser = createUser;
 module.exports.getUserData = getUserData;
 module.exports.updateUser = updateUser;
 module.exports.loginUser = loginUser;
-module.exports.postMessage = postMessage
+module.exports.deleteUser = deleteUser;
+module.exports.postMessage = postMessage;

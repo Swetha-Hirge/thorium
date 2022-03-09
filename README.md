@@ -36,6 +36,7 @@ If present, check that the token is valid.
 - Add this middleware at route level in the routes where applicale.
 
 ```diff
+
 + Please note that you have to also write the logic for authorisation so that a logged in user can only modify or fetch their own data.
 
 ``` 
