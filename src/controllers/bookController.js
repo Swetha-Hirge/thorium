@@ -1,14 +1,15 @@
 const booksModel = require('../models/booksModel');
 const validator = require("../validator/validator")
 const reviewModel = require("../models/reviewModel")
-
+// const {uploadFile} = require ('../route/route')
 
 //CREATE BOOK----------------------------------------
 
 let createBook = async function (req, res) {
     try {
         const data = req.body;
-
+        // const files= req.files;
+        // if(files.length <0) {return res.status(400).send({ status: false, message: "file Is Required" }) }
         if (!validator.isValid(data.title)) { return res.status(400).send({ status: false, message: "title Is Required" }) }
         if (!validator.isValid(data.excerpt)) { return res.status(400).send({ status: false, message: "Excerpt Is Requird" }) }
         if (!validator.isValid(data.userId)) { return res.status(400).send({ status: false, message: "User Id required!" }) }
@@ -21,7 +22,9 @@ let createBook = async function (req, res) {
         if (duplicteTitle) { return res.status(404).send({ status: false, message: "title already exists, title must be unique" }) }
         const duplicateISBN = await booksModel.findOne({ ISBN: data.ISBN })
         if (duplicateISBN) { return res.status(404).send({ status: false, message: "ISBN already exists, ISBN must be unique" }) }
-
+        // let uploadFileVar= await uploadFile(files[0])
+     
+        
         let savedData = await booksModel.create(data)
         res.status(201).send({ status: true, msg: 'created book sucssesfully', data: savedData })
     }
